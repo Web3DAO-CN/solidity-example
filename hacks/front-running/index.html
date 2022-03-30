@@ -1,1 +1,42 @@
-<!DOCTYPE html><html class="fa-events-icons-ready" lang="en"><head><meta charset="utf-8"><link href="/solidity-example/favicon.ico" rel="shortcut icon"><meta content="width=device-width,initial-scale=1,shrink-to-fit=yes" name="viewport"><meta content="#000000" name="theme-color"><script src="https://www.google-analytics.com/analytics.js" async type="text/javascript"></script><script src="https://use.fontawesome.com/ba3dde78ee.js"></script><link href="https://www.googletagmanager.com" rel="preconnect"><link href="https://use.fontawesome.com/ba3dde78ee.css" rel="stylesheet" media="all"><link href="/solidity-example/manifest.json" rel="manifest"><title>Solidity by Example</title><script src="https://www.googletagmanager.com/gtag/js?id=UA-133759045-1" async></script><script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","UA-133759045-1")</script><script src="/solidity-example/static/js/main.c873b319.js" defer></script><link href="/solidity-example/static/css/main.2a12f570.css" rel="stylesheet"><link href="https://use.fontawesome.com" rel="preconnect"><link href="https://www.google-analytics.com" rel="preconnect"></head><body class="light"><noscript>You need to enable JavaScript to run this app.</noscript><script>const theme=localStorage.getItem("theme")||"light";document.body.classList.add(theme)</script><div id="root"></div></body></html>
+<!DOCTYPE html><html class="fa-events-icons-ready" lang="en"><head><meta charset="utf-8"><link href="/solidity-example/favicon.ico" rel="shortcut icon"><meta content="width=device-width,initial-scale=1,shrink-to-fit=yes" name="viewport"><meta content="#000000" name="theme-color"><script src="https://www.google-analytics.com/analytics.js" async type="text/javascript"></script><script src="https://use.fontawesome.com/ba3dde78ee.js"></script><link href="https://www.googletagmanager.com" rel="preconnect"><link href="https://use.fontawesome.com/ba3dde78ee.css" rel="stylesheet" media="all"><link href="/solidity-example/manifest.json" rel="manifest"><title>Front Running | Solidity by Example | 0.8.10</title><script src="https://www.googletagmanager.com/gtag/js?id=UA-133759045-1" async></script><script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","UA-133759045-1")</script><script src="/solidity-example/static/js/main.dc5280b7.js" defer></script><link href="/solidity-example/static/css/main.2a12f570.css" rel="stylesheet"><link href="https://use.fontawesome.com" rel="preconnect"><link href="https://www.google-analytics.com" rel="preconnect"><meta content="An example of a Solidity contract vulnerable to front running" name="Description" data-react-helmet="true"></head><body class="light"><noscript>You need to enable JavaScript to run this app.</noscript><script>const theme=localStorage.getItem("theme")||"light";document.body.classList.add(theme)</script><div id="root"><div class="App_component__uBhCy"><div class="Header_component__dJEiY"><a href="/"><img alt="logo" class="Header_logo__nZ7K6" src="/solidity-example/static/media/logo.ed2942c41ca20fd4f70a.png"></a><h3 class="Header_header__Lhnr8"><a href="/">Solidity by Example</a><div class="Header_versions__j+f36"><div class="Header_version__4Ju4J">version 0.8.10</div></div></h3><img alt="dark mode" class="Header_dark__TFGN2" src="/solidity-example/static/media/mode-dark.5726a29b11b0940df6a4.png"></div><div class="App_main__nhgh3"><div class="Example_component__4Fiv8"><div class="Example_content__6NsNh"><h2>Front Running</h2><div><h3 id="vulnerability">Vulnerability</h3><p>Transactions take some time before they are mined. An attacker can watch the transaction pool and send a transaction, have it included in a block before the original transaction. This mechanism can be abused to re-order transactions to the attacker's advantage.</p><pre><code class="language-solidity"><span class="hljs-comment">// SPDX-License-Identifier: MIT</span>
+<span class="hljs-meta"><span class="hljs-keyword">pragma</span> <span class="hljs-keyword">solidity</span> ^0.8.10;</span>
+
+<span class="hljs-comment">/*
+Alice creates a guessing game.
+You win 10 ether if you can find the correct string that hashes to the target
+hash. Let's see how this contract is vulnerable to front running.
+*/</span>
+
+<span class="hljs-comment">/*
+1. Alice deploys FindThisHash with 10 Ether.
+2. Bob finds the correct string that will hash to the target hash. ("Ethereum")
+3. Bob calls solve("Ethereum") with gas price set to 15 gwei.
+4. Eve is watching the transaction pool for the answer to be submitted.
+5. Eve sees Bob's answer and calls solve("Ethereum") with a higher gas price
+   than Bob (100 gwei).
+6. Eve's transaction was mined before Bob's transaction.
+   Eve won the reward of 10 ether.
+
+What happened?
+Transactions take some time before they are mined.
+Transactions not yet mined are put in the transaction pool.
+Transactions with higher gas price are typically mined first.
+An attacker can get the answer from the transaction pool, send a transaction
+with a higher gas price so that their transaction will be included in a block
+before the original.
+*/</span>
+
+<span class="hljs-class"><span class="hljs-keyword">contract</span> <span class="hljs-title">FindThisHash</span> </span>{
+    <span class="hljs-keyword">bytes32</span> <span class="hljs-keyword">public</span> <span class="hljs-keyword">constant</span> hash <span class="hljs-operator">=</span>
+        <span class="hljs-number">0x564ccaf7594d66b1eaaea24fe01f0585bf52ee70852af4eac0cc4b04711cd0e2</span>;
+
+    <span class="hljs-function"><span class="hljs-keyword">constructor</span>(<span class="hljs-params"></span>) <span class="hljs-title"><span class="hljs-keyword">payable</span></span> </span>{}
+
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">solve</span>(<span class="hljs-params"><span class="hljs-keyword">string</span> <span class="hljs-keyword">memory</span> solution</span>) <span class="hljs-title"><span class="hljs-keyword">public</span></span> </span>{
+        <span class="hljs-built_in">require</span>(hash <span class="hljs-operator">=</span><span class="hljs-operator">=</span> <span class="hljs-built_in">keccak256</span>(<span class="hljs-built_in">abi</span>.<span class="hljs-built_in">encodePacked</span>(solution)), <span class="hljs-string">"Incorrect answer"</span>);
+
+        (<span class="hljs-keyword">bool</span> sent, ) <span class="hljs-operator">=</span> <span class="hljs-built_in">msg</span>.<span class="hljs-built_in">sender</span>.<span class="hljs-built_in">call</span>{<span class="hljs-built_in">value</span>: <span class="hljs-number">10</span> <span class="hljs-literal">ether</span>}(<span class="hljs-string">""</span>);
+        <span class="hljs-built_in">require</span>(sent, <span class="hljs-string">"Failed to send Ether"</span>);
+    }
+}
+</code></pre><h3 id="preventative-techniques">Preventative Techniques</h3><ul><li>use commit-reveal scheme</li><li>use submarine send</li></ul></div><div class="Example_prevNext__kHIFg"></div><p>Try on <a href="https://remix.ethereum.org" target="__blank">Remix</a></p></div></div></div></div></div></body></html>

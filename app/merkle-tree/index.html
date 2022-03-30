@@ -1,1 +1,79 @@
-<!DOCTYPE html><html class="fa-events-icons-ready" lang="en"><head><meta charset="utf-8"><link href="/solidity-example/favicon.ico" rel="shortcut icon"><meta content="width=device-width,initial-scale=1,shrink-to-fit=yes" name="viewport"><meta content="#000000" name="theme-color"><script src="https://www.google-analytics.com/analytics.js" async type="text/javascript"></script><script src="https://use.fontawesome.com/ba3dde78ee.js"></script><link href="https://www.googletagmanager.com" rel="preconnect"><link href="https://use.fontawesome.com/ba3dde78ee.css" rel="stylesheet" media="all"><link href="/solidity-example/manifest.json" rel="manifest"><title>Solidity by Example</title><script src="https://www.googletagmanager.com/gtag/js?id=UA-133759045-1" async></script><script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","UA-133759045-1")</script><script src="/solidity-example/static/js/main.c873b319.js" defer></script><link href="/solidity-example/static/css/main.2a12f570.css" rel="stylesheet"><link href="https://use.fontawesome.com" rel="preconnect"><link href="https://www.google-analytics.com" rel="preconnect"></head><body class="light"><noscript>You need to enable JavaScript to run this app.</noscript><script>const theme=localStorage.getItem("theme")||"light";document.body.classList.add(theme)</script><div id="root"></div></body></html>
+<!DOCTYPE html><html class="fa-events-icons-ready" lang="en"><head><meta charset="utf-8"><link href="/solidity-example/favicon.ico" rel="shortcut icon"><meta content="width=device-width,initial-scale=1,shrink-to-fit=yes" name="viewport"><meta content="#000000" name="theme-color"><script src="https://www.google-analytics.com/analytics.js" async type="text/javascript"></script><script src="https://use.fontawesome.com/ba3dde78ee.js"></script><link href="https://www.googletagmanager.com" rel="preconnect"><link href="https://use.fontawesome.com/ba3dde78ee.css" rel="stylesheet" media="all"><link href="/solidity-example/manifest.json" rel="manifest"><title>Merkle Tree | Solidity by Example | 0.8.10</title><script src="https://www.googletagmanager.com/gtag/js?id=UA-133759045-1" async></script><script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","UA-133759045-1")</script><script src="/solidity-example/static/js/main.dc5280b7.js" defer></script><link href="/solidity-example/static/css/main.2a12f570.css" rel="stylesheet"><link href="https://use.fontawesome.com" rel="preconnect"><meta content="Learn about Merkle tree in Solidity" name="Description" data-react-helmet="true"><link href="https://www.google-analytics.com" rel="preconnect"></head><body class="light"><noscript>You need to enable JavaScript to run this app.</noscript><script>const theme=localStorage.getItem("theme")||"light";document.body.classList.add(theme)</script><div id="root"><div class="App_component__uBhCy"><div class="Header_component__dJEiY"><a href="/"><img alt="logo" class="Header_logo__nZ7K6" src="/solidity-example/static/media/logo.ed2942c41ca20fd4f70a.png"></a><h3 class="Header_header__Lhnr8"><a href="/">Solidity by Example</a><div class="Header_versions__j+f36"><div class="Header_version__4Ju4J">version 0.8.10</div></div></h3><img alt="dark mode" class="Header_dark__TFGN2" src="/solidity-example/static/media/mode-dark.5726a29b11b0940df6a4.png"></div><div class="App_main__nhgh3"><div class="Example_component__4Fiv8"><div class="Example_content__6NsNh"><h2>Merkle Tree</h2><div><p>Merkle tree allows you to cryptographically prove that an element is contained</p><p>in a set without revealing the entire set.</p><pre><code class="language-solidity"><span class="hljs-comment">// SPDX-License-Identifier: MIT</span>
+<span class="hljs-meta"><span class="hljs-keyword">pragma</span> <span class="hljs-keyword">solidity</span> ^0.8.10;</span>
+
+<span class="hljs-class"><span class="hljs-keyword">contract</span> <span class="hljs-title">MerkleProof</span> </span>{
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">verify</span>(<span class="hljs-params">
+        <span class="hljs-keyword">bytes32</span>[] <span class="hljs-keyword">memory</span> proof,
+        <span class="hljs-keyword">bytes32</span> root,
+        <span class="hljs-keyword">bytes32</span> leaf,
+        <span class="hljs-keyword">uint</span> index
+    </span>) <span class="hljs-title"><span class="hljs-keyword">public</span></span> <span class="hljs-title"><span class="hljs-keyword">pure</span></span> <span class="hljs-title"><span class="hljs-keyword">returns</span></span> (<span class="hljs-params"><span class="hljs-keyword">bool</span></span>) </span>{
+        <span class="hljs-keyword">bytes32</span> hash <span class="hljs-operator">=</span> leaf;
+
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">uint</span> i <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i <span class="hljs-operator">&lt;</span> proof.<span class="hljs-built_in">length</span>; i<span class="hljs-operator">+</span><span class="hljs-operator">+</span>) {
+            <span class="hljs-keyword">bytes32</span> proofElement <span class="hljs-operator">=</span> proof[i];
+
+            <span class="hljs-keyword">if</span> (index <span class="hljs-operator">%</span> <span class="hljs-number">2</span> <span class="hljs-operator">=</span><span class="hljs-operator">=</span> <span class="hljs-number">0</span>) {
+                hash <span class="hljs-operator">=</span> <span class="hljs-built_in">keccak256</span>(<span class="hljs-built_in">abi</span>.<span class="hljs-built_in">encodePacked</span>(hash, proofElement));
+            } <span class="hljs-keyword">else</span> {
+                hash <span class="hljs-operator">=</span> <span class="hljs-built_in">keccak256</span>(<span class="hljs-built_in">abi</span>.<span class="hljs-built_in">encodePacked</span>(proofElement, hash));
+            }
+
+            index <span class="hljs-operator">=</span> index <span class="hljs-operator">/</span> <span class="hljs-number">2</span>;
+        }
+
+        <span class="hljs-keyword">return</span> hash <span class="hljs-operator">=</span><span class="hljs-operator">=</span> root;
+    }
+}
+
+<span class="hljs-class"><span class="hljs-keyword">contract</span> <span class="hljs-title">TestMerkleProof</span> <span class="hljs-keyword">is</span> <span class="hljs-title">MerkleProof</span> </span>{
+    <span class="hljs-keyword">bytes32</span>[] <span class="hljs-keyword">public</span> hashes;
+
+    <span class="hljs-function"><span class="hljs-keyword">constructor</span>(<span class="hljs-params"></span>) </span>{
+        <span class="hljs-keyword">string</span>[<span class="hljs-number">4</span>] <span class="hljs-keyword">memory</span> transactions <span class="hljs-operator">=</span> [
+            <span class="hljs-string">"alice -> bob"</span>,
+            <span class="hljs-string">"bob -> dave"</span>,
+            <span class="hljs-string">"carol -> alice"</span>,
+            <span class="hljs-string">"dave -> bob"</span>
+        ];
+
+        <span class="hljs-keyword">for</span> (<span class="hljs-keyword">uint</span> i <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i <span class="hljs-operator">&lt;</span> transactions.<span class="hljs-built_in">length</span>; i<span class="hljs-operator">+</span><span class="hljs-operator">+</span>) {
+            hashes.<span class="hljs-built_in">push</span>(<span class="hljs-built_in">keccak256</span>(<span class="hljs-built_in">abi</span>.<span class="hljs-built_in">encodePacked</span>(transactions[i])));
+        }
+
+        <span class="hljs-keyword">uint</span> n <span class="hljs-operator">=</span> transactions.<span class="hljs-built_in">length</span>;
+        <span class="hljs-keyword">uint</span> offset <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;
+
+        <span class="hljs-keyword">while</span> (n <span class="hljs-operator">></span> <span class="hljs-number">0</span>) {
+            <span class="hljs-keyword">for</span> (<span class="hljs-keyword">uint</span> i <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i <span class="hljs-operator">&lt;</span> n <span class="hljs-operator">-</span> <span class="hljs-number">1</span>; i <span class="hljs-operator">+</span><span class="hljs-operator">=</span> <span class="hljs-number">2</span>) {
+                hashes.<span class="hljs-built_in">push</span>(
+                    <span class="hljs-built_in">keccak256</span>(
+                        <span class="hljs-built_in">abi</span>.<span class="hljs-built_in">encodePacked</span>(hashes[offset <span class="hljs-operator">+</span> i], hashes[offset <span class="hljs-operator">+</span> i <span class="hljs-operator">+</span> <span class="hljs-number">1</span>])
+                    )
+                );
+            }
+            offset <span class="hljs-operator">+</span><span class="hljs-operator">=</span> n;
+            n <span class="hljs-operator">=</span> n <span class="hljs-operator">/</span> <span class="hljs-number">2</span>;
+        }
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getRoot</span>(<span class="hljs-params"></span>) <span class="hljs-title"><span class="hljs-keyword">public</span></span> <span class="hljs-title"><span class="hljs-keyword">view</span></span> <span class="hljs-title"><span class="hljs-keyword">returns</span></span> (<span class="hljs-params"><span class="hljs-keyword">bytes32</span></span>) </span>{
+        <span class="hljs-keyword">return</span> hashes[hashes.<span class="hljs-built_in">length</span> <span class="hljs-operator">-</span> <span class="hljs-number">1</span>];
+    }
+
+    <span class="hljs-comment">/* verify
+    3rd leaf
+    0x1bbd78ae6188015c4a6772eb1526292b5985fc3272ead4c65002240fb9ae5d13
+
+    root
+    0x074b43252ffb4a469154df5fb7fe4ecce30953ba8b7095fe1e006185f017ad10
+
+    index
+    2
+
+    proof
+    0x948f90037b4ea787c14540d9feb1034d4a5bc251b9b5f8e57d81e4b470027af8
+    0x63ac1b92046d474f84be3aa0ee04ffe5600862228c81803cce07ac40484aee43
+    */</span>
+}
+</code></pre></div><div class="Example_prevNext__kHIFg"></div><p>Try on <a href="https://remix.ethereum.org" target="__blank">Remix</a></p></div></div></div></div></div></body></html>

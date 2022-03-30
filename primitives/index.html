@@ -1,1 +1,56 @@
-<!DOCTYPE html><html class="fa-events-icons-ready" lang="en"><head><meta charset="utf-8"><link href="/solidity-example/favicon.ico" rel="shortcut icon"><meta content="width=device-width,initial-scale=1,shrink-to-fit=yes" name="viewport"><meta content="#000000" name="theme-color"><script src="https://www.google-analytics.com/analytics.js" async type="text/javascript"></script><script src="https://use.fontawesome.com/ba3dde78ee.js"></script><link href="https://www.googletagmanager.com" rel="preconnect"><link href="https://use.fontawesome.com/ba3dde78ee.css" rel="stylesheet" media="all"><link href="/solidity-example/manifest.json" rel="manifest"><title>Solidity by Example</title><script src="https://www.googletagmanager.com/gtag/js?id=UA-133759045-1" async></script><script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","UA-133759045-1")</script><script src="/solidity-example/static/js/main.c873b319.js" defer></script><link href="/solidity-example/static/css/main.2a12f570.css" rel="stylesheet"><link href="https://use.fontawesome.com" rel="preconnect"><link href="https://www.google-analytics.com" rel="preconnect"></head><body class="light"><noscript>You need to enable JavaScript to run this app.</noscript><script>const theme=localStorage.getItem("theme")||"light";document.body.classList.add(theme)</script><div id="root"></div></body></html>
+<!DOCTYPE html><html class="fa-events-icons-ready" lang="en"><head><meta charset="utf-8"><link href="/solidity-example/favicon.ico" rel="shortcut icon"><meta content="width=device-width,initial-scale=1,shrink-to-fit=yes" name="viewport"><meta content="#000000" name="theme-color"><script src="https://www.google-analytics.com/analytics.js" async type="text/javascript"></script><script src="https://use.fontawesome.com/ba3dde78ee.js"></script><link href="https://www.googletagmanager.com" rel="preconnect"><link href="https://use.fontawesome.com/ba3dde78ee.css" rel="stylesheet" media="all"><link href="/solidity-example/manifest.json" rel="manifest"><title>Primitive Data Types | Solidity by Example | 0.8.10</title><script src="https://www.googletagmanager.com/gtag/js?id=UA-133759045-1" async></script><script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","UA-133759045-1")</script><script src="/solidity-example/static/js/main.dc5280b7.js" defer></script><link href="/solidity-example/static/css/main.2a12f570.css" rel="stylesheet"><link href="https://use.fontawesome.com" rel="preconnect"><meta content="Primitive data types" name="Description" data-react-helmet="true"><link href="https://www.google-analytics.com" rel="preconnect"></head><body class="light"><noscript>You need to enable JavaScript to run this app.</noscript><script>const theme=localStorage.getItem("theme")||"light";document.body.classList.add(theme)</script><div id="root"><div class="App_component__uBhCy"><div class="Header_component__dJEiY"><a href="/"><img alt="logo" class="Header_logo__nZ7K6" src="/solidity-example/static/media/logo.ed2942c41ca20fd4f70a.png"></a><h3 class="Header_header__Lhnr8"><a href="/">Solidity by Example</a><div class="Header_versions__j+f36"><div class="Header_version__4Ju4J">version 0.8.10</div></div></h3><img alt="dark mode" class="Header_dark__TFGN2" src="/solidity-example/static/media/mode-dark.5726a29b11b0940df6a4.png"></div><div class="App_main__nhgh3"><div class="Example_component__4Fiv8"><div class="Example_content__6NsNh"><h2>Primitive Data Types</h2><div><p>Here we introduce you to some primitive data types available in Solidity.</p><ul><li><code>boolean</code></li><li><code>uint</code></li><li><code>int</code></li><li><code>address</code></li></ul><pre><code class="language-solidity"><span class="hljs-comment">// SPDX-License-Identifier: MIT</span>
+<span class="hljs-meta"><span class="hljs-keyword">pragma</span> <span class="hljs-keyword">solidity</span> ^0.8.10;</span>
+
+<span class="hljs-class"><span class="hljs-keyword">contract</span> <span class="hljs-title">Primitives</span> </span>{
+    <span class="hljs-keyword">bool</span> <span class="hljs-keyword">public</span> boo <span class="hljs-operator">=</span> <span class="hljs-literal">true</span>;
+
+    <span class="hljs-comment">/*
+    uint stands for unsigned integer, meaning non negative integers
+    different sizes are available
+        uint8   ranges from 0 to 2 ** 8 - 1
+        uint16  ranges from 0 to 2 ** 16 - 1
+        ...
+        uint256 ranges from 0 to 2 ** 256 - 1
+    */</span>
+    <span class="hljs-keyword">uint8</span> <span class="hljs-keyword">public</span> u8 <span class="hljs-operator">=</span> <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">uint</span> <span class="hljs-keyword">public</span> u256 <span class="hljs-operator">=</span> <span class="hljs-number">456</span>;
+    <span class="hljs-keyword">uint</span> <span class="hljs-keyword">public</span> u <span class="hljs-operator">=</span> <span class="hljs-number">123</span>; <span class="hljs-comment">// uint is an alias for uint256</span>
+
+    <span class="hljs-comment">/*
+    Negative numbers are allowed for int types.
+    Like uint, different ranges are available from int8 to int256
+    
+    int256 ranges from -2 ** 255 to 2 ** 255 - 1
+    int128 ranges from -2 ** 127 to 2 ** 127 - 1
+    */</span>
+    <span class="hljs-keyword">int8</span> <span class="hljs-keyword">public</span> i8 <span class="hljs-operator">=</span> <span class="hljs-number">-1</span>;
+    <span class="hljs-keyword">int</span> <span class="hljs-keyword">public</span> i256 <span class="hljs-operator">=</span> <span class="hljs-number">456</span>;
+    <span class="hljs-keyword">int</span> <span class="hljs-keyword">public</span> i <span class="hljs-operator">=</span> <span class="hljs-number">-123</span>; <span class="hljs-comment">// int is same as int256</span>
+
+    <span class="hljs-comment">// minimum and maximum of int</span>
+    <span class="hljs-keyword">int</span> <span class="hljs-keyword">public</span> minInt <span class="hljs-operator">=</span> <span class="hljs-keyword">type</span>(<span class="hljs-keyword">int</span>).<span class="hljs-built_in">min</span>;
+    <span class="hljs-keyword">int</span> <span class="hljs-keyword">public</span> maxInt <span class="hljs-operator">=</span> <span class="hljs-keyword">type</span>(<span class="hljs-keyword">int</span>).<span class="hljs-built_in">max</span>;
+
+    <span class="hljs-keyword">address</span> <span class="hljs-keyword">public</span> addr <span class="hljs-operator">=</span> <span class="hljs-number">0xCA35b7d915458EF540aDe6068dFe2F44E8fa733c</span>;
+
+    <span class="hljs-comment">/*
+    In Solidity, the data type byte represent a sequence of bytes. 
+    Solidity presents two type of bytes types :
+
+     - fixed-sized byte arrays
+     - dynamically-sized byte arrays.
+     
+     The term bytes in Solidity represents a dynamic array of bytes. 
+     It’s a shorthand for byte[] .
+    */</span>
+    <span class="hljs-keyword">bytes1</span> a <span class="hljs-operator">=</span> <span class="hljs-number">0xb5</span>; <span class="hljs-comment">//  [10110101]</span>
+    <span class="hljs-keyword">bytes1</span> b <span class="hljs-operator">=</span> <span class="hljs-number">0x56</span>; <span class="hljs-comment">//  [01010110]</span>
+
+    <span class="hljs-comment">// Default values</span>
+    <span class="hljs-comment">// Unassigned variables have a default value</span>
+    <span class="hljs-keyword">bool</span> <span class="hljs-keyword">public</span> defaultBoo; <span class="hljs-comment">// false</span>
+    <span class="hljs-keyword">uint</span> <span class="hljs-keyword">public</span> defaultUint; <span class="hljs-comment">// 0</span>
+    <span class="hljs-keyword">int</span> <span class="hljs-keyword">public</span> defaultInt; <span class="hljs-comment">// 0</span>
+    <span class="hljs-keyword">address</span> <span class="hljs-keyword">public</span> defaultAddr; <span class="hljs-comment">// 0x0000000000000000000000000000000000000000</span>
+}
+</code></pre></div><div class="Example_prevNext__kHIFg"></div><p>Try on <a href="https://remix.ethereum.org" target="__blank">Remix</a></p></div></div></div></div></div></body></html>
