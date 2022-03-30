@@ -1,0 +1,67 @@
+<!DOCTYPE html><html class="fa-events-icons-ready" lang="en"><head><meta charset="utf-8"><link href="/favicon.ico" rel="shortcut icon"><meta content="width=device-width,initial-scale=1,shrink-to-fit=yes" name="viewport"><meta content="#000000" name="theme-color"><script src="https://www.google-analytics.com/analytics.js" async type="text/javascript"></script><script src="https://use.fontawesome.com/ba3dde78ee.js"></script><link href="https://www.googletagmanager.com" rel="preconnect"><link href="https://use.fontawesome.com/ba3dde78ee.css" rel="stylesheet" media="all"><link href="/manifest.json" rel="manifest"><title>Visibility | Solidity by Example | 0.8.10</title><script src="https://www.googletagmanager.com/gtag/js?id=UA-133759045-1" async></script><script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","UA-133759045-1")</script><script src="/static/js/main.afd1d7f6.js" defer></script><link href="/static/css/main.2a12f570.css" rel="stylesheet"><link href="https://use.fontawesome.com" rel="preconnect"><meta content="An example of external, internal, private and public functions in Solidity" name="Description" data-react-helmet="true"><link href="https://www.google-analytics.com" rel="preconnect"></head><body class="light"><noscript>You need to enable JavaScript to run this app.</noscript><script>const theme=localStorage.getItem("theme")||"light";document.body.classList.add(theme)</script><div id="root"><div class="App_component__uBhCy"><div class="Header_component__dJEiY"><a href="/"><img alt="logo" class="Header_logo__nZ7K6" src="/static/media/logo.ed2942c41ca20fd4f70a.png"></a><h3 class="Header_header__Lhnr8"><a href="/">Solidity by Example</a><div class="Header_versions__j+f36"><div class="Header_version__4Ju4J">version 0.8.10</div></div></h3><img alt="dark mode" class="Header_dark__TFGN2" src="/static/media/mode-dark.5726a29b11b0940df6a4.png"></div><div class="App_main__nhgh3"><div class="Example_component__4Fiv8"><div class="Example_content__6NsNh"><h2>Visibility</h2><div><p>Functions and state variables have to declare whether they are accessible by other contracts.</p><p>Functions can be declared as</p><ul><li><code>public</code> - any contract and account can call</li><li><code>private</code> - only inside the contract that defines the function</li><li><code>internal</code>- only inside contract that inherits an <code>internal</code> function</li><li><code>external</code> - only other contracts and accounts can call</li></ul><p>State variables can be declared as <code>public</code>, <code>private</code>, or <code>internal</code> but not <code>external</code>.</p><pre><code class="language-solidity"><span class="hljs-comment">// SPDX-License-Identifier: MIT</span>
+<span class="hljs-meta"><span class="hljs-keyword">pragma</span> <span class="hljs-keyword">solidity</span> ^0.8.10;</span>
+
+<span class="hljs-class"><span class="hljs-keyword">contract</span> <span class="hljs-title">Base</span> </span>{
+    <span class="hljs-comment">// Private function can only be called</span>
+    <span class="hljs-comment">// - inside this contract</span>
+    <span class="hljs-comment">// Contracts that inherit this contract cannot call this function.</span>
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">privateFunc</span>(<span class="hljs-params"></span>) <span class="hljs-title"><span class="hljs-keyword">private</span></span> <span class="hljs-title"><span class="hljs-keyword">pure</span></span> <span class="hljs-title"><span class="hljs-keyword">returns</span></span> (<span class="hljs-params"><span class="hljs-keyword">string</span> <span class="hljs-keyword">memory</span></span>) </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-string">"private function called"</span>;
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">testPrivateFunc</span>(<span class="hljs-params"></span>) <span class="hljs-title"><span class="hljs-keyword">public</span></span> <span class="hljs-title"><span class="hljs-keyword">pure</span></span> <span class="hljs-title"><span class="hljs-keyword">returns</span></span> (<span class="hljs-params"><span class="hljs-keyword">string</span> <span class="hljs-keyword">memory</span></span>) </span>{
+        <span class="hljs-keyword">return</span> privateFunc();
+    }
+
+    <span class="hljs-comment">// Internal function can be called</span>
+    <span class="hljs-comment">// - inside this contract</span>
+    <span class="hljs-comment">// - inside contracts that inherit this contract</span>
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">internalFunc</span>(<span class="hljs-params"></span>) <span class="hljs-title"><span class="hljs-keyword">internal</span></span> <span class="hljs-title"><span class="hljs-keyword">pure</span></span> <span class="hljs-title"><span class="hljs-keyword">returns</span></span> (<span class="hljs-params"><span class="hljs-keyword">string</span> <span class="hljs-keyword">memory</span></span>) </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-string">"internal function called"</span>;
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">testInternalFunc</span>(<span class="hljs-params"></span>) <span class="hljs-title"><span class="hljs-keyword">public</span></span> <span class="hljs-title"><span class="hljs-keyword">pure</span></span> <span class="hljs-title"><span class="hljs-keyword">virtual</span></span> <span class="hljs-title"><span class="hljs-keyword">returns</span></span> (<span class="hljs-params"><span class="hljs-keyword">string</span> <span class="hljs-keyword">memory</span></span>) </span>{
+        <span class="hljs-keyword">return</span> internalFunc();
+    }
+
+    <span class="hljs-comment">// Public functions can be called</span>
+    <span class="hljs-comment">// - inside this contract</span>
+    <span class="hljs-comment">// - inside contracts that inherit this contract</span>
+    <span class="hljs-comment">// - by other contracts and accounts</span>
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">publicFunc</span>(<span class="hljs-params"></span>) <span class="hljs-title"><span class="hljs-keyword">public</span></span> <span class="hljs-title"><span class="hljs-keyword">pure</span></span> <span class="hljs-title"><span class="hljs-keyword">returns</span></span> (<span class="hljs-params"><span class="hljs-keyword">string</span> <span class="hljs-keyword">memory</span></span>) </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-string">"public function called"</span>;
+    }
+
+    <span class="hljs-comment">// External functions can only be called</span>
+    <span class="hljs-comment">// - by other contracts and accounts</span>
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">externalFunc</span>(<span class="hljs-params"></span>) <span class="hljs-title"><span class="hljs-keyword">external</span></span> <span class="hljs-title"><span class="hljs-keyword">pure</span></span> <span class="hljs-title"><span class="hljs-keyword">returns</span></span> (<span class="hljs-params"><span class="hljs-keyword">string</span> <span class="hljs-keyword">memory</span></span>) </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-string">"external function called"</span>;
+    }
+
+    <span class="hljs-comment">// This function will not compile since we're trying to call</span>
+    <span class="hljs-comment">// an external function here.</span>
+    <span class="hljs-comment">// function testExternalFunc() public pure returns (string memory) {</span>
+    <span class="hljs-comment">//     return externalFunc();</span>
+    <span class="hljs-comment">// }</span>
+
+    <span class="hljs-comment">// State variables</span>
+    <span class="hljs-keyword">string</span> <span class="hljs-keyword">private</span> privateVar <span class="hljs-operator">=</span> <span class="hljs-string">"my private variable"</span>;
+    <span class="hljs-keyword">string</span> <span class="hljs-keyword">internal</span> internalVar <span class="hljs-operator">=</span> <span class="hljs-string">"my internal variable"</span>;
+    <span class="hljs-keyword">string</span> <span class="hljs-keyword">public</span> publicVar <span class="hljs-operator">=</span> <span class="hljs-string">"my public variable"</span>;
+    <span class="hljs-comment">// State variables cannot be external so this code won't compile.</span>
+    <span class="hljs-comment">// string external externalVar = "my external variable";</span>
+}
+
+<span class="hljs-class"><span class="hljs-keyword">contract</span> <span class="hljs-title">Child</span> <span class="hljs-keyword">is</span> <span class="hljs-title">Base</span> </span>{
+    <span class="hljs-comment">// Inherited contracts do not have access to private functions</span>
+    <span class="hljs-comment">// and state variables.</span>
+    <span class="hljs-comment">// function testPrivateFunc() public pure returns (string memory) {</span>
+    <span class="hljs-comment">//     return privateFunc();</span>
+    <span class="hljs-comment">// }</span>
+
+    <span class="hljs-comment">// Internal function call be called inside child contracts.</span>
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">testInternalFunc</span>(<span class="hljs-params"></span>) <span class="hljs-title"><span class="hljs-keyword">public</span></span> <span class="hljs-title"><span class="hljs-keyword">pure</span></span> <span class="hljs-title"><span class="hljs-keyword">override</span></span> <span class="hljs-title"><span class="hljs-keyword">returns</span></span> (<span class="hljs-params"><span class="hljs-keyword">string</span> <span class="hljs-keyword">memory</span></span>) </span>{
+        <span class="hljs-keyword">return</span> internalFunc();
+    }
+}
+</code></pre></div><div class="Example_prevNext__kHIFg"><a href="/super">&lt; Calling Parent Contracts</a><a href="/interface">Interface ></a></div><p>Try on <a href="https://remix.ethereum.org" target="__blank">Remix</a></p></div></div></div></div></div></body></html>
