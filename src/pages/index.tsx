@@ -362,35 +362,35 @@ export const ROUTES_BY_CATEGORY = [
     title: "",
     routes: SOL_ROUTES.map((route) => ({
       ...route,
-      path: `/${route.path}`,
+      path: `${route.path}`,
     })),
   },
   {
     title: "Applications",
     routes: APP_ROUTES.map((route) => ({
       ...route,
-      path: `/app/${route.path}`,
+      path: `app/${route.path}`,
     })),
   },
   {
     title: "Hacks",
     routes: HACK_ROUTES.map((route) => ({
       ...route,
-      path: `/hacks/${route.path}`,
+      path: `hacks/${route.path}`,
     })),
   },
   {
     title: "Tests",
     routes: TEST_ROUTES.map((route) => ({
       ...route,
-      path: `/tests/${route.path}`,
+      path: `tests/${route.path}`,
     })),
   },
   {
     title: "DeFi",
     routes: DEFI_ROUTES.map((route) => ({
       ...route,
-      path: `/defi/${route.path}`,
+      path: `defi/${route.path}`,
     })),
   },
 ]
