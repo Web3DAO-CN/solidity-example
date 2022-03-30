@@ -2,6 +2,7 @@
   "name": "solidity-example",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://web3dao-cn.github.io/solidity-example",
   "dependencies": {
     "highlight.js": "^11.4.0",
     "react": "^17.0.2",
@@ -17,7 +18,7 @@
     "postbuild": "npm run lint && react-snap",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -b master -d build",
+    "deploy": "gh-pages -d build",
     "md-to-react": "node scripts/md-to-react.js",
     "lint": "prettier --write src"
   },
