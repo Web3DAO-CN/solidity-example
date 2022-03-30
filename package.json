@@ -1,0 +1,53 @@
+{
+  "name": "solidity-example",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "highlight.js": "^11.4.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-helmet": "^6.1.0",
+    "react-router-dom": "^6.2.1",
+    "react-scripts": "^5.0.0",
+    "typescript": "^4.3.2"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "postbuild": "npm run lint && react-snap",
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -b master -d build",
+    "md-to-react": "node scripts/md-to-react.js",
+    "lint": "prettier --write src"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "devDependencies": {
+    "@types/highlight.js": "^9.12.4",
+    "@types/marked": "^4.0.1",
+    "@types/mustache": "^4.1.2",
+    "@types/node": "^17.0.10",
+    "@types/react": "^17.0.38",
+    "@types/react-dom": "^17.0.11",
+    "@types/react-helmet": "^6.1.5",
+    "@types/react-router-dom": "^5.3.3",
+    "gh-pages": "^3.2.3",
+    "highlightjs-solidity": "^2.0.3",
+    "marked": "^4.0.10",
+    "mustache": "^4.2.0",
+    "prettier": "^2.5.1",
+    "prettier-plugin-solidity": "^1.0.0-beta.19",
+    "react-snap": "^1.23.0",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.5.5",
+    "yaml": "^1.10.2"
+  }
+}

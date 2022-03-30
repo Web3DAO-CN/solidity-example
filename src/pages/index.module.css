@@ -1,0 +1,40 @@
+.component {
+  /* set width for auto-margin to be same for 0.5 and 0.6 home page */
+  width: 420px;
+}
+.component ul {
+  list-style: none;
+  padding: 0;
+}
+.updates {
+  padding: 5px;
+  padding-left: 15px;
+  border-radius: 5px;
+}
+.category {
+  color: var(--link-color);
+}
+.listItem {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  white-space: nowrap;
+}
+.label {
+  margin-left: 10px;
+}
+.header a {
+  text-decoration: none;
+}
+.youTube {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 10px 0 10px 0;
+}
+.youTubeLogo {
+  width: 30px;
+  padding-right: 10px;
+}
