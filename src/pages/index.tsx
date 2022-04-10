@@ -317,6 +317,10 @@ const HACK_ROUTES: Route[] = [
     path: "contract-size",
     title: "Bypass Contract Size Check",
   },
+  {
+    path: "NFT-multi-mint",
+    title: "NFT multi mint",
+  },
 ]
 
 const TEST_ROUTES: Route[] = [

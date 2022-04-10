@@ -9,7 +9,7 @@ import modeDark from "./mode-dark.png"
 function Header() {
   const { state, setTheme } = useAppContext()
 
-  let logo = state.theme == "dark" ? logoDark : logoLight
+  let logo = state.theme === "dark" ? logoDark : logoLight
 
   function onClickTheme(theme: Theme) {
     setTheme(theme)
@@ -30,7 +30,7 @@ function Header() {
         </div>
       </h3>
 
-      {state.theme == "dark" ? (
+      {state.theme === "dark" ? (
         <img
           src={modeLight}
           alt="light mode"

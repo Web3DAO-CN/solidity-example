@@ -36,7 +36,7 @@ export const Provider: React.FC<Props> = ({ children }) => {
   const [state, setState] = useState(INITIAL_STATE)
 
   function _setTheme(theme: Theme) {
-    if (theme == "dark") {
+    if (theme === "dark") {
       document.body.classList.remove("light")
       document.body.classList.add("dark")
     } else {
