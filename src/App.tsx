@@ -19,7 +19,7 @@ function App() {
   }
 
   return (
-    <Router basename={process.env.PUBLIC_URL}>
+    <Router basename="/solidity-example">
       <div className={styles.component}>
         <Header />
         <div className={styles.main}>

@@ -44,6 +44,7 @@ import component_gas from "./pages/gas"
 import component_hacks_accessing_private_data from "./pages/hacks/accessing-private-data"
 import component_hacks_block_timestamp_manipulation from "./pages/hacks/block-timestamp-manipulation"
 import component_hacks_contract_size from "./pages/hacks/contract-size"
+import component_nft_multi_mint from "./pages/hacks/NFT-multi-mint"
 import component_hacks_delegatecall from "./pages/hacks/delegatecall"
 import component_hacks_denial_of_service from "./pages/hacks/denial-of-service"
 import component_hacks_front_running from "./pages/hacks/front-running"
@@ -281,6 +282,10 @@ const routes: Route[] = [
   {
     path: "/hacks/contract-size",
     component: component_hacks_contract_size,
+  },
+  {
+    path: "/hacks/NFT-multi-mint",
+    component: component_nft_multi_mint,
   },
   {
     path: "/hacks/delegatecall",
